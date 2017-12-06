@@ -69,6 +69,12 @@ class tweedie_gen(rv_continuous):
     Dunn, Peter K. and Smyth, Gordon K. 2005, Series evaluation of Tweedie
     exponential dispersion model densities
     """
+    def _support_mask(self, x):
+        return (self.a <= x) & (x < self.b)
+
+    def _open_support_mask(self, x):
+        return (self.a <= x) & (x < self.b)
+
     def _pdf(self, x, p, mu, phi):
         return np.exp(self._logpdf(x, p, mu, phi))
 
@@ -177,9 +183,9 @@ class tweedie_gen(rv_continuous):
     # def _argcheck(self, arg):
     #     return True
 
-almost_zero = np.nextafter(0, -1)
+# almost_zero = np.nextafter(0, -1)
 
-tweedie = tweedie_gen(name='tweedie', a=almost_zero, b=np.inf,
+tweedie = tweedie_gen(name='tweedie', a=0., b=np.inf,
                       shapes='p, mu, phi')
 
 

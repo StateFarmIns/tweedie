@@ -8,7 +8,7 @@ from __future__ import division
 
 import pytest
 import numpy as np
-from numpy.testing import assert_allclose
+from numpy.testing import assert_allclose, assert_equal
 from tweedie import tweedie
 from results import test_ys, test_results, num_tests
 
@@ -118,6 +118,14 @@ def test_cdf_to_ppf(mu, p, phi):
     xs = tweedie(mu=mu, p=p, phi=phi).cdf(ys)
     assert_allclose(qs, xs)
 
+
+@pytest.mark.parametrize('mu', [1, 5, 10])
+@pytest.mark.parametrize('p', [0, 1, 1.5, 2, 3])
+@pytest.mark.parametrize('phi', [1, 5, 10])
+def test_ppf_extremes(mu, p, phi):
+    qs = np.array([0., 1.])
+    ys = tweedie(mu=mu, p=p, phi=phi).ppf(qs)
+    assert_equal(ys, np.array([0., np.inf]))
 
 def test_extreme_nans():
     y = tweedie(mu=1, p=1.02, phi=1.02).pdf(30)
